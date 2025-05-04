@@ -1,23 +1,53 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { use } from "react";
+import { Link, useNavigate } from "react-router";
+import { AuthContext } from "../provider/AuthProvider";
 
 const Login = () => {
+  const { login } = use(AuthContext);
+  const navigate = useNavigate();
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    login(email, password)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorCode, errorMessage);
+      });
+
+    console.log("Login Successfull!");
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl py-5">
         <h1 className="text-2xl font-semibold text-center text-primary">
           Login your account
         </h1>
-        <div className="card-body">
+        <form onSubmit={handleLogin} className="card-body">
           <fieldset className="fieldset">
+            {/* email */}
             <label className="label font-semibold">Email address</label>
             <input
+              name="email"
               type="email"
               className="input"
               placeholder="Enter your email address"
             />
+            {/* password */}
             <label className="label font-semibold">Password</label>
             <input
+              name="password"
               type="password"
               className="input"
               placeholder="Enter your password"
@@ -25,7 +55,9 @@ const Login = () => {
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
-            <button className="btn btn-neutral mt-4">Login</button>
+            <button type="submit" className="btn btn-neutral mt-4">
+              Login
+            </button>
           </fieldset>
           <p className="font-semibold text-center text-accent">
             Dont't Have An Account ?{" "}
@@ -33,7 +65,7 @@ const Login = () => {
               Register
             </Link>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );
