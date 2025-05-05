@@ -1,17 +1,17 @@
 import React from "react";
 import { FiEye, FiShare2, FiBookmark } from "react-icons/fi";
-import { AiFillStar } from "react-icons/ai";
 import { format } from "date-fns";
-import rating from "daisyui/components/rating";
 import { FaStar } from "react-icons/fa";
+import { Link } from "react-router";
 
 const NewsCard = ({ news }) => {
   const {
+    id,
     title,
     author: { name, published_date, img },
     rating: { number },
     total_view,
-    thumbnail_url,
+    image_url,
     details,
     tags,
   } = news;
@@ -41,7 +41,7 @@ const NewsCard = ({ news }) => {
 
         {/* Thumbnail */}
         <img
-          src={thumbnail_url}
+          src={image_url}
           alt="news"
           className="w-full h-60 object-cover rounded "
         />
@@ -57,9 +57,12 @@ const NewsCard = ({ news }) => {
           {details.length > 200 ? (
             <>
               {details.slice(0, 100)}...
-              <span className="text-secondary font-medium cursor-pointer ml-1">
+              <Link
+                to={`/news-details/${id}`}
+                className="text-secondary font-medium cursor-pointer ml-1"
+              >
                 Read More
-              </span>
+              </Link>
             </>
           ) : (
             details

@@ -1,14 +1,21 @@
-import React, { use } from "react";
-import { Link } from "react-router";
+import React, { use, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
-  const { createUser, setUser } = use(AuthContext);
+  const { createUser, setUser, updateUser } = use(AuthContext);
+  const navigate = useNavigate();
+  const [nameError, setNameError] = useState("");
 
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
+    if (name.length < 5) {
+      setNameError("Name should be more than 5 character");
+    } else {
+      setNameError("");
+    }
     const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
@@ -18,7 +25,15 @@ const Register = () => {
       .then((result) => {
         const user = result.user;
         // console.log(user);
-        setUser(user);
+        updateUser({ displayName: name, photoURL: photo })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: photo });
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error);
+            setUser(user);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -43,6 +58,7 @@ const Register = () => {
               placeholder="Enter your name"
               required
             />
+            {nameError && <p className="text-xs text-error">{nameError}</p>}
 
             {/* Photo URL */}
             <label className="label font-semibold">Photo URL</label>
@@ -53,7 +69,6 @@ const Register = () => {
               placeholder="Enter your photo url"
               required
             />
-
             {/* email */}
             <label className="label font-semibold">Email</label>
             <input
@@ -63,7 +78,6 @@ const Register = () => {
               placeholder="Enter your email address"
               required
             />
-
             {/* password */}
             <label className="label font-semibold">Password</label>
             <input
@@ -73,12 +87,10 @@ const Register = () => {
               placeholder="Enter your password"
               required
             />
-
             <label className="label">
               <input type="checkbox" className="checkbox" />
               Accept <span className="font-semibold">Terms & Conditions</span>
             </label>
-
             <button type="submit" className="btn btn-neutral mt-4">
               Register
             </button>
