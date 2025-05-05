@@ -17,7 +17,7 @@ const Login = () => {
     login(email, password)
       .then((result) => {
         const user = result.user;
-        console.log(user);
+        // console.log(user);
         navigate(`${location.state ? location.state : "/"}`);
       })
       .catch((error) => {
@@ -27,7 +27,7 @@ const Login = () => {
         setError(errorCode);
       });
 
-    console.log("Login Successfull!");
+    // console.log("Login Successfull!");
   };
 
   return (

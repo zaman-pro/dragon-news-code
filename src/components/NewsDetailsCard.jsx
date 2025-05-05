@@ -8,7 +8,7 @@ import { Link } from "react-router";
 
 const NewsDetailsCard = ({ news }) => {
   const { id, image_url, title, category_id } = news;
-  //   console.log({ id, image_url, title });
+
   return (
     <div className="space-y-5">
       <img className="w-full h-[350px] object-cover" src={image_url} alt="" />
